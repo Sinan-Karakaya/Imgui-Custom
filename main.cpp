@@ -107,6 +107,9 @@ int main(int, char**)
     static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     io.Fonts->AddFontFromFileTTF("../assets/fonts/fa-regular-400.ttf", 13.0f, &config, icon_ranges);
 
+    // Enable docking
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -133,6 +136,7 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
@@ -174,6 +178,12 @@ int main(int, char**)
 
         // Rendering
         ImGui::Render();
+        // Update and Render additional Platform Windows
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+        }
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
